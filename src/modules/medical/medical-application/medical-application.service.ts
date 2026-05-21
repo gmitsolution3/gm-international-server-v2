@@ -1,10 +1,11 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreateMedicalApplicationDto } from './dto/create-medical-application.dto';
 import { UpdateMedicalApplicationDto } from './dto/update-medical-application.dto';
 import { MedicalApplication } from './entities/medical-application.entity';
@@ -49,6 +50,9 @@ export class MedicalApplicationService {
 
   async findOne(id: string) {
     try {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new BadRequestException('Invalid application id');
+      }
       const data = await this.medicalAppModel.findById(id).exec();
       if (!data) {
         throw new NotFoundException(`Application with ID ${id} not found`);
@@ -64,7 +68,6 @@ export class MedicalApplicationService {
       );
     }
   }
-
 
   async update(
     id: string,

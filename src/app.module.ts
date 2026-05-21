@@ -5,23 +5,24 @@ import { ScholarshipModule } from './modules/scholarship/scholarship.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
 import { MedicalModule } from './modules/medical/medical.module';
+import { BusinessModule } from './modules/business/business.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (ConfigService: ConfigService) => ({
-        uri: ConfigService.get<string>('DBURL'),
+        uri: ConfigService.get<string>('DBURL'), 
         dbName: 'GM_International',
       }),
     }),
     CoreModule,
     ScholarshipModule,
     MedicalModule,
+    BusinessModule,
   ],
 })
 export class AppModule {
@@ -33,4 +34,4 @@ export class AppModule {
       console.log('=== MongoDB Connection Failed! ===');
     }
   }
-} 
+}
