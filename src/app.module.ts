@@ -6,6 +6,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
 import { MedicalModule } from './modules/medical/medical.module';
 import { BusinessModule } from './modules/business/business.module';
+import { TouristPackageModule } from './modules/tourist/tourist-package/tourist-package.module';
+import { TouristApplicationModule } from './modules/tourist/tourist-application/tourist-application.module';
+import { CustomApplicationModule } from './modules/tourist/custom-application/custom-application.module';
+import { TouristModule } from './modules/tourist/tourist.module';
 
 @Module({
   imports: [
@@ -15,7 +19,7 @@ import { BusinessModule } from './modules/business/business.module';
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (ConfigService: ConfigService) => ({
-        uri: ConfigService.get<string>('DBURL'), 
+        uri: ConfigService.get<string>('DBURL'),
         dbName: 'GM_International',
       }),
     }),
@@ -23,6 +27,7 @@ import { BusinessModule } from './modules/business/business.module';
     ScholarshipModule,
     MedicalModule,
     BusinessModule,
+    TouristModule,
   ],
 })
 export class AppModule {

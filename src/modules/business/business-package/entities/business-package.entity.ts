@@ -16,7 +16,7 @@ class Phase {
   returnCity: string;
 }
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'business_packages', versionKey: false })
 export class BusinessPackage extends Document {
   @Prop({ required: true })
   packageName: string;
@@ -60,7 +60,6 @@ export class BusinessPackage extends Document {
   @Prop({ default: 'active' })
   packageStatus: string;
 
-  
   @Prop({ type: Boolean, default: false })
   isWithVisaAndAirTicket: boolean;
 
