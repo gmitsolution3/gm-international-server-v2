@@ -32,8 +32,6 @@ export class ScholarshipPackageService {
     try {
       const data = await this.scholarshipPackageModel.create(body);
 
-      console.log({ data });
-
       return {
         success: true,
         message: 'Scholarship package created successfully',

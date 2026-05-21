@@ -4,6 +4,9 @@ import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { ScholarshipModule } from './modules/scholarship/scholarship.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
+import { MedicalPackageModule } from './src/modules/medical/medical-package/medical-package.module';
+import { MedicalPackageModule } from './modules/medical/medical-package/medical-package.module';
+import { MedicalApplicationModule } from './modules/medical/medical-application/medical-application.module';
 
 @Module({
   imports: [
@@ -20,6 +23,8 @@ import { Connection } from 'mongoose';
     }),
     CoreModule,
     ScholarshipModule,
+    MedicalPackageModule,
+    MedicalApplicationModule,
   ],
 })
 export class AppModule {
