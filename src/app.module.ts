@@ -4,9 +4,7 @@ import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { ScholarshipModule } from './modules/scholarship/scholarship.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
-import { MedicalPackageModule } from './src/modules/medical/medical-package/medical-package.module';
-import { MedicalPackageModule } from './modules/medical/medical-package/medical-package.module';
-import { MedicalApplicationModule } from './modules/medical/medical-application/medical-application.module';
+import { MedicalModule } from './modules/medical/medical.module';
 
 @Module({
   imports: [
@@ -18,13 +16,12 @@ import { MedicalApplicationModule } from './modules/medical/medical-application/
       inject: [ConfigService],
       useFactory: async (ConfigService: ConfigService) => ({
         uri: ConfigService.get<string>('DBURL'),
-        dbName:"GM_International"
+        dbName: 'GM_International',
       }),
     }),
     CoreModule,
     ScholarshipModule,
-    MedicalPackageModule,
-    MedicalApplicationModule,
+    MedicalModule,
   ],
 })
 export class AppModule {

@@ -1,7 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  collection: 'medical_application',
+  versionKey: false,
+})
 export class MedicalApplication extends Document {
   @Prop({ required: true })
   country: string;
@@ -54,10 +58,10 @@ export class MedicalApplication extends Document {
   @Prop({ required: true })
   createdBy: string;
 
-  @Prop({ default: 'Pending' }) 
+  @Prop({ default: 'Pending' })
   paymentStatus: string;
 
-  @Prop({ default: 'pending' }) 
+  @Prop({ default: 'pending' })
   appointmentStatus: string;
 
   @Prop({ required: true })

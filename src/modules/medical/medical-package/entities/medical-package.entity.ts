@@ -1,7 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  collection: 'medical_package',
+  versionKey: false,
+})
 export class MedicalPackage extends Document {
   @Prop({ required: true })
   hospital_name: string;
@@ -27,10 +31,10 @@ export class MedicalPackage extends Document {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ default: 0 }) 
+  @Prop({ default: 0 })
   total_view: number;
 
-  @Prop({ default: 0 }) 
+  @Prop({ default: 0 })
   total_sell: number;
 
   @Prop({ required: true })
