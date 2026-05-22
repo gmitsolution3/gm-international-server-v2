@@ -27,6 +27,23 @@ export class ScholarshipPackageService {
       );
     }
   }
+  async getScholarshipHomePagePkg() {
+    try {
+      const data = await this.scholarshipPackageModel
+        .find()
+        .sort({ createdAt: -1 })
+        .limit(3)
+        .exec();
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch scholarship packages',
+      );
+    }
+  }
 
   async createScholarshipPackage(body: any) {
     try {
@@ -44,7 +61,6 @@ export class ScholarshipPackageService {
       );
     }
   }
-
 
   // update
   async updateScholarshipPackage(id: string, body: any) {
@@ -71,7 +87,6 @@ export class ScholarshipPackageService {
     }
   }
 
-
   // delete
   async deleteScholarshipPackage(id: string) {
     try {
@@ -87,6 +102,94 @@ export class ScholarshipPackageService {
       };
     } catch (error) {
       throw error;
+    }
+  }
+
+  async searchQueryData() {
+    try {
+      const data = await this.scholarshipPackageModel.aggregate([
+        {
+          $project: {
+            country: {
+              $toLower: '$country',
+            },
+
+            city: {
+              $arrayElemAt: [
+                {
+                  $split: ['$city', ','],
+                },
+                0,
+              ],
+            },
+
+            programs: 1,
+          },
+        },
+
+        {
+          $unwind: '$programs',
+        },
+
+        {
+          $group: {
+            _id: {
+              country: '$country',
+              city: '$city',
+            },
+
+            programs: {
+              $addToSet: '$programs',
+            },
+          },
+        },
+
+        {
+          $group: {
+            _id: '$_id.country',
+
+            cities: {
+              $push: {
+                city: '$_id.city',
+                programs: '$programs',
+              },
+            },
+          },
+        },
+
+        {
+          $project: {
+            _id: 0,
+            country: '$_id',
+            cities: 1,
+          },
+        },
+      ]);
+
+      // সব unique programs collect করার জন্য
+      const allPrograms = [
+        ...new Set(
+          data.flatMap((country) =>
+            country.cities.flatMap((city) => city.programs),
+          ),
+        ),
+      ];
+
+      return {
+        success: true,
+        message: 'Scholarship filter data fetched successfully',
+
+        data: {
+          countryInfo: data,
+          programs: allPrograms.filter(
+            (program) => program && program.trim() !== '',
+          ),
+        },
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch scholarship filter data',
+      );
     }
   }
 }

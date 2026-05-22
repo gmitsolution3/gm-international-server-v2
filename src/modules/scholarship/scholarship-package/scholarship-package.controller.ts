@@ -16,6 +16,8 @@ import { ScholarshipPackage } from '../scholarship.schema';
 // total apis:
 // post: //localhost:8080/scholarship-package/api/v1/create-pkg
 // get: //localhost:8080/scholarship-package/api/v1/get/available-pkg
+// get: //localhost:8080/scholarship-package/api/v1/get-home/scholarship-pkg
+// get: //localhost:8080/scholarship-package/api/v1/get-scholarship-filtered
 // patch: //localhost:8080/scholarship-package/api/v1/upd-pkg/6a0d8cc86aa034e7fa7696f7
 // put:localhost:8080/scholarship-package/api/v1/upd-whole-pkg/6a0d8d4dd79f8b17255fee3a
 // delete: //localhost:8080/scholarship-package/api/v1/dlt-pkg/6a0d8d4dd79f8b17255fee3a
@@ -32,6 +34,10 @@ export class ScholarshipPackageController {
     return await this.scholarshipPackageService.getScholarshipPackageManagement();
   }
 
+  @Get('get-home/scholarship-pkg')
+  async getHomePagePkg() {
+    return await this.scholarshipPackageService.getScholarshipHomePagePkg();
+  }
   // create-api-> scholarship-package/api/v1/create-pkg
   @Post('create-pkg')
   async CreateScholarshipPkg(@Body() body: ScholarshipPackage) {
@@ -47,7 +53,6 @@ export class ScholarshipPackageController {
       );
     }
   }
-
   // patch update api => scholarship-package/api/v1/upd-pkg/id
   @Patch('upd-pkg/:id')
   async updateScholarshipPackage(@Param('id') id: string, @Body() body: any) {
@@ -71,5 +76,10 @@ export class ScholarshipPackageController {
   @Delete('dlt-pkg/:id')
   async deleteScholarshipPackage(@Param('id') id: string) {
     return await this.scholarshipPackageService.deleteScholarshipPackage(id);
+  }
+
+  @Get('get-scholarship-filtered')
+  async getScholarshipFiltered() {
+    return await this.scholarshipPackageService.searchQueryData();
   }
 }

@@ -1,26 +1,88 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+import { VideoGallery } from './entities/video-gallery.entity';
+
 import { CreateVideoGalleryDto } from './dto/create-video-gallery.dto';
 import { UpdateVideoGalleryDto } from './dto/update-video-gallery.dto';
 
 @Injectable()
 export class VideoGalleryService {
-  create(createVideoGalleryDto: CreateVideoGalleryDto) {
-    return 'This action adds a new videoGallery';
+  constructor(
+    @InjectModel(VideoGallery.name)
+    private readonly videoGalleryModel: Model<VideoGallery>,
+  ) {}
+
+  async createVideo(createVideoGalleryDto: CreateVideoGalleryDto) {
+    try {
+      const data = await this.videoGalleryModel.create(createVideoGalleryDto);
+
+      return {
+        success: true,
+        message: 'Video created successfully',
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create video');
+    }
   }
 
-  findAll() {
-    return `This action returns all videoGallery`;
+  async findAll() {
+    try {
+      const data = await this.videoGalleryModel.find().exec();
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch videos');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} videoGallery`;
+  async findOne(id: string) {
+    try {
+      const data = await this.videoGalleryModel.findById(id).exec();
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch video');
+    }
   }
 
-  update(id: number, updateVideoGalleryDto: UpdateVideoGalleryDto) {
-    return `This action updates a #${id} videoGallery`;
+  async update(id: string, updateVideoGalleryDto: UpdateVideoGalleryDto) {
+    try {
+      const data = await this.videoGalleryModel
+        .findByIdAndUpdate(id, updateVideoGalleryDto, {
+          new: true,
+        })
+        .exec();
+
+      return {
+        success: true,
+        message: 'Video updated successfully',
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update video');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} videoGallery`;
+  async remove(id: string) {
+    try {
+      await this.videoGalleryModel.findByIdAndDelete(id).exec();
+
+      return {
+        success: true,
+        message: 'Video deleted successfully',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete video');
+    }
   }
 }

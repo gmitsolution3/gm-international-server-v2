@@ -14,7 +14,7 @@ import { CreateImageGalleryDto } from './dto/create-image-gallery.dto';
 import { UpdateImageGalleryDto } from './dto/update-image-gallery.dto';
 
 // apis
-// post:    localhost:8080/image-gallery/api/v1/create-image
+// post:    localhost:8080/image-gallery/api/v1/create/image-gallery
 // get:     localhost:8080/image-gallery/api/v1/get/all-image
 // get:     localhost:8080/image-gallery/api/v1/get/image/:id
 // patch:   localhost:8080/image-gallery/api/v1/upd-image/:id
@@ -26,7 +26,7 @@ export class ImageGalleryController {
 
   // CREATE IMAGE
   // api will be -> image-gallery/api/v1/create-image
-  @Post('create-image')
+  @Post('create/image-gallery')
   create(
     @Body()
     createImageGalleryDto: CreateImageGalleryDto,
