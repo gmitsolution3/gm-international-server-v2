@@ -12,6 +12,7 @@ import { NoticeManagementModule } from './modules/setting/notice-management/noti
 import { AboutModule } from './modules/setting/about/about.module';
 import { VideoGalleryModule } from './modules/setting/activities/video-gallery/video-gallery.module';
 import { ImageGalleryModule } from './modules/setting/activities/image-gallery/image-gallery.module';
+import { SettingModule } from './modules/setting/setting.module';
 
 @Module({
   imports: [
@@ -30,11 +31,7 @@ import { ImageGalleryModule } from './modules/setting/activities/image-gallery/i
     MedicalModule,
     BusinessModule,
     TouristModule,
-    OfficeAddressModule,
-    NoticeManagementModule,
-    AboutModule,
-    VideoGalleryModule,
-    ImageGalleryModule,
+    SettingModule,
   ],
 })
 export class AppModule {
