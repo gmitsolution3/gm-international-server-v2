@@ -6,10 +6,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
 import { MedicalModule } from './modules/medical/medical.module';
 import { BusinessModule } from './modules/business/business.module';
-import { TouristPackageModule } from './modules/tourist/tourist-package/tourist-package.module';
-import { TouristApplicationModule } from './modules/tourist/tourist-application/tourist-application.module';
-import { CustomApplicationModule } from './modules/tourist/custom-application/custom-application.module';
 import { TouristModule } from './modules/tourist/tourist.module';
+import { OfficeAddressModule } from './modules/setting/office-address/office-address.module';
+import { NoticeManagementModule } from './modules/setting/notice-management/notice-management.module';
+import { AboutModule } from './modules/setting/about/about.module';
+import { VideoGalleryModule } from './modules/setting/activities/video-gallery/video-gallery.module';
+import { ImageGalleryModule } from './modules/setting/activities/image-gallery/image-gallery.module';
 
 @Module({
   imports: [
@@ -28,6 +30,11 @@ import { TouristModule } from './modules/tourist/tourist.module';
     MedicalModule,
     BusinessModule,
     TouristModule,
+    OfficeAddressModule,
+    NoticeManagementModule,
+    AboutModule,
+    VideoGalleryModule,
+    ImageGalleryModule,
   ],
 })
 export class AppModule {
