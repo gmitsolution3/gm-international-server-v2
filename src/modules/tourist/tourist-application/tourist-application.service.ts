@@ -37,6 +37,7 @@ export class TouristApplicationService {
         data,
       };
     } catch (error) {
+      console.log({ error });
       throw new InternalServerErrorException(
         'Failed to submit tourist application',
       );
@@ -74,6 +75,7 @@ export class TouristApplicationService {
         .findById(id)
         .lean()
         .exec();
+      console.log({ data: data });
 
       if (!data) {
         throw new NotFoundException('Tourist application not found');
@@ -93,6 +95,24 @@ export class TouristApplicationService {
 
       throw new InternalServerErrorException(
         'Failed to fetch tourist application',
+      );
+    }
+  }
+
+  async getUserApplication(email: string) {
+    try {
+      const data = await this.touristApplicationModel
+        .find({ createdBy: email })
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch tourist packages',
       );
     }
   }

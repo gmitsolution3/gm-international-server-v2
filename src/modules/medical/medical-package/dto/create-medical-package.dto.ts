@@ -54,18 +54,25 @@ export class CreateMedicalPackageDto {
   hospital_type: string;
 
   @IsArray()
-  @IsString({ each: true }) 
+  @IsString({ each: true })
   department: string[];
 
   @IsString()
   @IsNotEmpty()
-  description: string; 
+  description: string;
 
   @IsNumber()
   @IsOptional()
-  rating?: number; 
+  rating?: number;
 
   @IsString()
   @IsNotEmpty()
   createdBy: string;
+}
+
+export class FilterMedicalPackageDto {
+  country?: string;
+  city?: string;
+  provience?: string;
+  dept?: string;
 }

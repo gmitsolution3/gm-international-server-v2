@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateMedicalPackageDto } from './dto/create-medical-package.dto';
@@ -31,7 +31,7 @@ export class MedicalPackageService {
   // সব প্যাকেজ একসাথে খোঁজার জন্য
   async findAll() {
     try {
-      const data = await this.medicalPkgModel.find().exec();
+      const data = await this.medicalPkgModel.find().sort({ createdAt: -1 }).exec();
       return {
         success: true,
         data,
@@ -40,6 +40,126 @@ export class MedicalPackageService {
       throw new InternalServerErrorException(
         'Failed to fetch medical packages',
       );
+    }
+  }
+  async findHomeMedicalPkg() {
+    try {
+      const data = await this.medicalPkgModel
+        .find()
+        .sort({ createdAt: -1 })
+        .limit(3)
+        .lean()
+        .exec();
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch medical packages',
+      );
+    }
+  }
+
+  async getMedicalSearchResult(search: string) {
+    try {
+      if (!search) {
+        throw new BadRequestException('Search is required');
+      }
+
+      const result = await this.medicalPkgModel.find({
+        $or: [
+          {
+            hospital_name: {
+              $regex: search,
+              $options: 'i',
+            },
+          },
+          {
+            city_name: {
+              $regex: search,
+              $options: 'i',
+            },
+          },
+          {
+            provience: {
+              $regex: search,
+              $options: 'i',
+            },
+          },
+        ],
+      });
+
+      if (!result.length) {
+        throw new NotFoundException('Search data not available');
+      }
+
+      return {
+        success: true,
+        message: 'Search data found in db',
+        data: result,
+      };
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(
+        'Failed to fetch medical packages',
+      );
+    }
+  }
+
+  async getFilteredMedicalList(filters: {
+    country?: string;
+    city?: string;
+    provience?: string;
+    dept?: string;
+  }) {
+    try {
+      const { country, city, provience, dept } = filters;
+
+      const query: any = {};
+
+      if (country) {
+        query.country_name = country;
+      }
+
+      if (city) {
+        query.city_name = city;
+      }
+
+      if (provience) {
+        query.provience = provience;
+      }
+
+      if (dept) {
+        query.department = {
+          $regex: dept,
+          $options: 'i',
+        };
+      }
+
+      const result = await this.medicalPkgModel.find(query);
+
+      if (!result.length) {
+        throw new NotFoundException('No data found in db');
+      }
+
+      return {
+        success: true,
+        total: result.length,
+        data: result,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Server Error');
     }
   }
 
@@ -55,6 +175,60 @@ export class MedicalPackageService {
       throw new InternalServerErrorException(
         'Failed to fetch the medical package',
       );
+    }
+  }
+
+  async getHospitalFilters() {
+    try {
+      const result = await this.medicalPkgModel.aggregate([
+        {
+          $unwind: {
+            path: '$department',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            country: {
+              $addToSet: '$country_name',
+            },
+            provience: {
+              $addToSet: '$provience',
+            },
+            city: {
+              $addToSet: '$city_name',
+            },
+            department: {
+              $addToSet: '$department',
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            country: 1,
+            areaInfo: {
+              provience: '$provience',
+              city: '$city',
+            },
+            department: 1,
+          },
+        },
+      ]);
+
+      return (
+        result[0] || {
+          country: [],
+          areaInfo: {
+            provience: [],
+            city: [],
+          },
+          department: [],
+        }
+      );
+    } catch (error) {
+      throw new InternalServerErrorException('Filter load failed');
     }
   }
 

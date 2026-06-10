@@ -46,8 +46,8 @@ export class MedicalApplication extends Document {
   @Prop({ required: true })
   passport_copy: string;
 
-  @Prop({ required: true })
-  payment: string;
+  // @Prop({ required: true })
+  // payment: string;
 
   @Prop({ required: true })
   destinationCountry: string;
@@ -73,11 +73,6 @@ export class MedicalApplication extends Document {
   @Prop({ required: true })
   paymentMethod: string;
 
-  @Prop({ required: true })
-  paymentScreenshot: string;
-
-  @Prop({ required: true })
-  transactionId: string;
 }
 
 export const MedicalApplicationSchema =

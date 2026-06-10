@@ -163,7 +163,8 @@ export class CreateTouristApplicationDto {
   @Type(() => IncludesAndExcludesDto)
   readonly includesAndExcludes: IncludesAndExcludesDto;
 
+  @IsOptional()
   @ValidateNested()
   @Type(() => ClientInfoDto)
-  readonly client: ClientInfoDto;
+  readonly client?: ClientInfoDto;
 }

@@ -6,6 +6,8 @@ import {
   Param,
   Patch,
   Post,
+  Put,
+  Query,
 } from '@nestjs/common';
 import { TouristApplicationService } from './tourist-application.service';
 import { CreateTouristApplicationDto } from './dto/create-tourist-application.dto';
@@ -23,6 +25,7 @@ export class TouristApplicationController {
     @Body()
     createTouristApplicationDto: CreateTouristApplicationDto,
   ) {
+    console.log('kick');
     return this.touristApplicationService.createApplication(
       createTouristApplicationDto,
     );
@@ -42,10 +45,30 @@ export class TouristApplicationController {
     return this.touristApplicationService.getSingleApplication(id);
   }
 
+  // get user application
+  // GET -> tourist-application/api/v1/get-user-application?email={email}
+  @Get('get-user-application')
+  finUserApplication(@Query('email') email: string) {
+    return this.touristApplicationService.getUserApplication(email);
+  }
+
   // update application
   // PATCH -> tourist-application/api/v1/update/:id
   @Patch('update/:id')
   update(
+    @Param('id') id: string,
+    @Body()
+    updateTouristApplicationDto: UpdateTouristApplicationDto,
+  ) {
+    return this.touristApplicationService.updateApplication(
+      id,
+      updateTouristApplicationDto,
+    );
+  }
+  // update application
+  // PATCH -> tourist-application/api/v1/update/:id
+  @Put('update-single-application/:id')
+  updateSingleApplication(
     @Param('id') id: string,
     @Body()
     updateTouristApplicationDto: UpdateTouristApplicationDto,

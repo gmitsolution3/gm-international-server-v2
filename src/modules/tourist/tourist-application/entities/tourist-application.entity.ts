@@ -137,8 +137,8 @@ export class TouristApplication {
   @Prop({ type: IncludesAndExcludes, required: true })
   includesAndExcludes: IncludesAndExcludes;
 
-  @Prop({ type: ClientInfo, required: true })
-  client: ClientInfo;
+  @Prop({ type: ClientInfo, required: false})
+  client?: ClientInfo;
 }
 
 export const TouristApplicationSchema =

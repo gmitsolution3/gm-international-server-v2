@@ -45,6 +45,26 @@ export class ScholarshipPackageService {
     }
   }
 
+  async getScholarshipPkgDetails(id:string){
+    try{
+      const data = await this.scholarshipPackageModel.findById(id)
+
+      if(!data){
+        throw new NotFoundException("Scholarship package not found")
+      }
+
+      return {
+        success: true,
+        message: 'Scholarship package found successfully',
+        data,
+      };
+
+    }catch(error){
+      throw new Error(error.message)
+    }
+
+  }
+
   async createScholarshipPackage(body: any) {
     try {
       const data = await this.scholarshipPackageModel.create(body);

@@ -97,9 +97,9 @@ export class CreateMedicalApplicationDto {
   @IsNotEmpty()
   passport_copy: string;
 
-  @IsString()
-  @IsNotEmpty()
-  payment: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // payment: string;
 
   @IsString()
   @IsNotEmpty()
@@ -120,12 +120,11 @@ export class CreateMedicalApplicationDto {
   @IsString()
   @IsNotEmpty()
   paymentMethod: string;
+}
 
-  @IsString()
-  @IsNotEmpty()
-  paymentScreenshot: string;
-
-  @IsString()
-  @IsNotEmpty()
-  transactionId: string;
+export class UpdatePaymentDto {
+  paymentStatus: string;
+  paymentMethod: string;
+  paidAt: Date;
+  paymentAmount: number;
 }

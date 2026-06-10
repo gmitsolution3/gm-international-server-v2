@@ -7,12 +7,9 @@ import { Connection } from 'mongoose';
 import { MedicalModule } from './modules/medical/medical.module';
 import { BusinessModule } from './modules/business/business.module';
 import { TouristModule } from './modules/tourist/tourist.module';
-import { OfficeAddressModule } from './modules/setting/office-address/office-address.module';
-import { NoticeManagementModule } from './modules/setting/notice-management/notice-management.module';
-import { AboutModule } from './modules/setting/about/about.module';
-import { VideoGalleryModule } from './modules/setting/activities/video-gallery/video-gallery.module';
-import { ImageGalleryModule } from './modules/setting/activities/image-gallery/image-gallery.module';
 import { SettingModule } from './modules/setting/setting.module';
+import { RootUserModules } from './modules/user/user.module';
+
 
 @Module({
   imports: [
@@ -32,6 +29,7 @@ import { SettingModule } from './modules/setting/setting.module';
     BusinessModule,
     TouristModule,
     SettingModule,
+    RootUserModules,
   ],
 })
 export class AppModule {
