@@ -32,37 +32,53 @@ export class BusinessApplication extends Document {
   gender: string;
 
   @Prop({ required: true })
-  dateOfBirth: string;
-
-  @Prop({ required: true })
-  designation: string;
-
-  @Prop({ required: true })
-  companyType: string;
-
-  @Prop({ required: true })
   officeLocation: string;
-
-  @Prop({ required: true })
-  travelPurpose: string;
 
   @Prop({ required: true })
   email: string;
 
   @Prop({ required: true })
-  travelPlan: string;
-
-  @Prop({ required: true })
   paymentMethod: string;
 
   @Prop({ required: true })
+  tradeLicense: string;
+
+  @Prop({ default: '' })
+  passportFile?: string;
+
+  @Prop({ required: true })
+  photo: string;
+
+  @Prop({ required: true })
   createdBy: string;
+
+  @Prop({ required: true })
+  packageId: string;
+
+  @Prop()
+  b2bid?: string;
 
   @Prop({ default: 'pending' })
   paymentStatus: string;
 
   @Prop({ default: 'pending' })
   applicationStatus: string;
+
+  // package snapshot
+  @Prop()
+  packageName?: string;
+
+  @Prop()
+  eventName?: string;
+
+  @Prop()
+  duration?: string;
+
+  @Prop()
+  minimumPax?: number;
+
+  @Prop()
+  maxPrice?: number;
 }
 
 export const BusinessApplicationSchema =

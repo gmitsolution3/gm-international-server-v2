@@ -9,34 +9,40 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import mongoose, { Model } from 'mongoose';
 
-import { BusinessDeal } from './entities/business-deal.entity';
-
 import { CreateBusinessDealDto } from './dto/create-business-deal.dto';
 
 import { UpdateBusinessDealDto } from './dto/update-business-deal.dto';
+import {
+  BusinessDeal,
+  BusinessDealDocument,
+} from './entities/business-deal.entity';
 
 @Injectable()
 export class BusinessDealService {
   constructor(
     @InjectModel(BusinessDeal.name)
-    private readonly businessDealModel: Model<BusinessDeal>,
+    private readonly businessDealModel: Model<BusinessDealDocument>,
   ) {}
 
   // create deal
-  async createDeal(createBusinessDealDto: CreateBusinessDealDto) {
-    try {
-      const data = await this.businessDealModel.create(createBusinessDealDto);
+  async createDeal(body: any) {
+    const { service, serviceTitle, createdBy, applicationStatus, ...formData } =
+      body;
 
-      return {
-        success: true,
-        message: 'Business deal submitted successfully',
-        data,
-      };
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to submit business deal');
-    }
+    const data = await this.businessDealModel.create({
+      service,
+      serviceTitle,
+      createdBy,
+      applicationStatus,
+      allFormData: formData,
+    });
+
+    return {
+      success: true,
+      message: 'Business deal submitted successfully',
+      data,
+    };
   }
-
   // get all deals
   async getAllDeals() {
     try {

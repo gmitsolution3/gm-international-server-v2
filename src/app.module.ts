@@ -9,6 +9,7 @@ import { BusinessModule } from './modules/business/business.module';
 import { TouristModule } from './modules/tourist/tourist.module';
 import { SettingModule } from './modules/setting/setting.module';
 import { RootUserModules } from './modules/user/user.module';
+import { FacebookCapiService } from './common/facebook-capi/facebook-capi.service';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { RootUserModules } from './modules/user/user.module';
     SettingModule,
     RootUserModules,
   ],
+  providers: [FacebookCapiService],
 })
 export class AppModule {
   constructor(@InjectConnection() private connection: Connection) {}

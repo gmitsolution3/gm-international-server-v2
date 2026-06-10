@@ -45,7 +45,67 @@ export class BusinessPackageService {
   async getAllPackages() {
     try {
       const data = await this.businessPackageModel
-        .find()
+        .find({ packageStatus: 'active', isWithVisaAndAirTicket: true })
+        .sort({ createdAt: -1 })
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch business packages',
+      );
+    }
+  }
+
+  async findHomePackage() {
+    try {
+      const query = { packageStatus: 'active', isWithVisaAndAirTicket: true };
+      const data = await this.businessPackageModel
+        .find(query)
+        .sort({ createdAt: -1 })
+        .limit(3)
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch business packages',
+      );
+    }
+  }
+  async withoutVisaPkg() {
+    try {
+      const query = { packageStatus: 'active', isWithVisaAndAirTicket: false };
+      const data = await this.businessPackageModel
+        .find(query)
+        .sort({ createdAt: -1 })
+        .limit(3)
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch business packages',
+      );
+    }
+  }
+  async withoutVisaAllPkg() {
+    try {
+      const query = { packageStatus: 'active', isWithVisaAndAirTicket: false };
+      const data = await this.businessPackageModel
+        .find(query)
         .sort({ createdAt: -1 })
         .lean()
         .exec();

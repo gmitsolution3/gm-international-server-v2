@@ -1,4 +1,3 @@
-
 import { IsString, IsNotEmpty, IsEmail, IsOptional } from 'class-validator';
 
 export class CreateBusinessApplicationDto {
@@ -36,37 +35,35 @@ export class CreateBusinessApplicationDto {
 
   @IsString()
   @IsNotEmpty()
-  dateOfBirth: string;
-
-  @IsString()
-  @IsNotEmpty()
-  designation: string;
-
-  @IsString()
-  @IsNotEmpty()
-  companyType: string;
-
-  @IsString()
-  @IsNotEmpty()
   officeLocation: string;
 
-  @IsString()
-  @IsNotEmpty()
-  travelPurpose: string;
-
   @IsEmail()
-  @IsNotEmpty()
   email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  travelPlan: string;
 
   @IsString()
   @IsNotEmpty()
   paymentMethod: string;
 
-  @IsEmail()
+  @IsString()
   @IsNotEmpty()
+  tradeLicense: string;
+
+  @IsOptional()
+  @IsString()
+  passportFile?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  photo: string;
+
+  @IsEmail()
   createdBy: string;
+
+  @IsString()
+  @IsNotEmpty()
+  packageId: string;
+
+  @IsOptional()
+  @IsString()
+  b2bid?: string;
 }

@@ -37,6 +37,26 @@ export class BusinessPackageController {
     return this.businessPackageService.getAllPackages();
   }
 
+  // get all packages
+  // GET -> business-package/api/v1/get/business-home-pkg
+  @Get('get/business-home-pkg')
+  findHomePackage() {
+    return this.businessPackageService.findHomePackage();
+  }
+
+  // get all packages
+  // GET -> business-package/api/v1/get/business-home-pkg-without-visa
+  @Get('get/business-home-pkg-without-visa')
+  withoutVisaPkg() {
+    return this.businessPackageService.withoutVisaPkg();
+  }
+  // get all packages
+  // GET -> business-package/api/v1/get/business-all-pkg-without-visa
+  @Get('get/business-all-pkg-without-visa')
+  withoutVisaAllPkg() {
+    return this.businessPackageService.withoutVisaAllPkg();
+  }
+
   // get single package
   // GET -> business-package/api/v1/get/single-package/:id
   @Get('get/single-package/:id')

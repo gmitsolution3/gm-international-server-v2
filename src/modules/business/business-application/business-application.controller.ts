@@ -25,7 +25,7 @@ export class BusinessApplicationController {
     @Body()
     createBusinessApplicationDto: CreateBusinessApplicationDto,
   ) {
-    return this.businessApplicationService.appliedApplication(
+    return this.businessApplicationService.createBusinessApplication(
       createBusinessApplicationDto,
     );
   }

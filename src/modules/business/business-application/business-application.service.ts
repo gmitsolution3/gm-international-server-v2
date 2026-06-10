@@ -12,32 +12,69 @@ import mongoose, { Model } from 'mongoose';
 
 import { BusinessApplication } from './entities/business-application.entity';
 import { CreateBusinessApplicationDto } from './dto/create-business-application.dto';
+import { BusinessPackage } from '../business-package/entities/business-package.entity';
+import { FacebookCapiService } from '../../../common/facebook-capi/facebook-capi.service';
 
 @Injectable()
 export class BusinessApplicationService {
   constructor(
     @InjectModel(BusinessApplication.name)
     private readonly businessApplicationModel: Model<BusinessApplication>,
+
+    @InjectModel(BusinessPackage.name)
+    private readonly businessPackageModel: Model<BusinessPackage>,
+
+    private readonly facebookCapiService: FacebookCapiService,
   ) {}
 
   // create application
-  async appliedApplication(
-    createBusinessApplicationDto: CreateBusinessApplicationDto,
-  ) {
+  async createBusinessApplication(dto: CreateBusinessApplicationDto) {
     try {
-      const data = await this.businessApplicationModel.create(
-        createBusinessApplicationDto,
+      const packageInfo = await this.businessPackageModel.findById(
+        dto.packageId,
       );
+
+      if (!packageInfo) {
+        throw new NotFoundException('Business package not found');
+      }
+
+      const payload = {
+        ...dto,
+        eventName: packageInfo.eventName,
+        duration: packageInfo.duration,
+        packageName: packageInfo.packageName,
+        minimumPax: packageInfo.minimumPax,
+        maxPrice: packageInfo.maxPrice,
+        paymentStatus: 'pending',
+        applicationStatus: 'pending',
+      };
+      const application = await this.businessApplicationModel.create(payload);
+
+      await this.businessPackageModel.updateOne(
+        { _id: packageInfo._id },
+        {
+          $inc: {
+            sold: 1,
+          },
+        },
+      );
+
+      await this.facebookCapiService.sendBusinessLeadPixel(application);
 
       return {
         success: true,
-        message: 'Business application submitted successfully',
-        data,
+        data: application,
       };
     } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to submit business application',
-      );
+      console.log(error);
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Failed to create application');
     }
   }
 

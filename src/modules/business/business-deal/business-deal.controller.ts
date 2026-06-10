@@ -8,8 +8,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { BusinessDealService } from './business-deal.service';
-import { CreateBusinessDealDto } from './dto/create-business-deal.dto';
 import { UpdateBusinessDealDto } from './dto/update-business-deal.dto';
+import { CreateBusinessDealDto } from './dto/create-business-deal.dto';
 
 @Controller('business-deal/api/v1')
 export class BusinessDealController {
@@ -18,11 +18,8 @@ export class BusinessDealController {
   // create deal
   // POST -> business-deal/api/v1/create
   @Post('create')
-  create(
-    @Body()
-    createBusinessDealDto: CreateBusinessDealDto,
-  ) {
-    return this.businessDealService.createDeal(createBusinessDealDto);
+  create(@Body() body: any) {
+    return this.businessDealService.createDeal(body);
   }
 
   // get all deals
