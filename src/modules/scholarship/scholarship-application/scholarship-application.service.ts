@@ -87,8 +87,8 @@ export class ScholarshipApplicationService {
   // CREATE
   async createApplication(body: any) {
     try {
-      console.log({body})
-      
+      console.log({ body });
+
       const data = await this.scholarshipApplicationModel.create(body);
       return {
         success: true,
@@ -164,6 +164,162 @@ export class ScholarshipApplicationService {
       };
     } catch (error) {
       console.log(error);
+      throw error;
+    }
+  }
+
+  async getAdminDashboardStats() {
+    try {
+      const [
+        statusStats,
+        paymentStats,
+        recentApplications,
+        topUniversities,
+        monthlyTrend,
+        totalApplications,
+      ] = await Promise.all([
+        // 1. Application Status Stats
+        this.scholarshipApplicationModel.aggregate([
+          {
+            $group: {
+              _id: '$applicationStatus',
+              count: { $sum: 1 },
+            },
+          },
+        ]),
+
+        // 2. Payment Status Stats
+        this.scholarshipApplicationModel.aggregate([
+          {
+            $group: {
+              _id: '$paymentStatus',
+              count: { $sum: 1 },
+            },
+          },
+        ]),
+
+        // 3. Recent Applications
+        this.scholarshipApplicationModel
+          .find()
+          .sort({ submittedAt: -1 })
+          .limit(5)
+          .select({
+            applicantId: 1,
+            firstName: 1,
+            lastName: 1,
+            email: 1,
+            phoneNumber: 1,
+            applicationStatus: 1,
+            paymentStatus: 1,
+            university: 1,
+            submittedAt: 1,
+          })
+          .lean(),
+
+        // 4. Top Universities
+        this.scholarshipApplicationModel.aggregate([
+          {
+            $group: {
+              _id: '$university',
+              count: { $sum: 1 },
+            },
+          },
+          { $sort: { count: -1 } },
+          { $limit: 5 },
+        ]),
+
+        // 5. Monthly Trend
+        this.scholarshipApplicationModel.aggregate([
+          {
+            $addFields: {
+              submittedDate: {
+                $cond: [
+                  { $eq: [{ $type: '$submittedAt' }, 'date'] },
+                  '$submittedAt',
+                  {
+                    $cond: [
+                      { $eq: [{ $type: '$submittedAt' }, 'string'] },
+                      { $toDate: '$submittedAt' },
+                      null,
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          {
+            $match: {
+              submittedDate: { $ne: null },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                year: { $year: '$submittedDate' },
+                month: { $month: '$submittedDate' },
+              },
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $sort: {
+              '_id.year': -1,
+              '_id.month': -1,
+            },
+          },
+          {
+            $limit: 6,
+          },
+        ]),
+
+        // 6. Total Applications
+        this.scholarshipApplicationModel.countDocuments(),
+      ]);
+
+      const statusCounts = statusStats.reduce(
+        (acc, cur) => {
+          if (cur._id) {
+            acc[cur._id.toLowerCase()] = cur.count;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      const paymentCounts = paymentStats.reduce(
+        (acc, cur) => {
+          if (cur._id) {
+            acc[cur._id.toLowerCase()] = cur.count;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      const payload = {
+        documentCount: {
+          totalApplications,
+          totalApproved: statusCounts.approved || 0,
+          totalPending: statusCounts.pending || 0,
+          totalRejected: statusCounts.reject || statusCounts.rejected || 0,
+        },
+
+        paymentStats: {
+          pending: paymentCounts.pending || 0,
+          paid: paymentCounts.paid || 0,
+          failed: paymentCounts.failed || 0,
+        },
+
+        recentApplications,
+        topUniversities,
+        monthlyTrend,
+      };
+
+      return {
+        success: true,
+        data: payload,
+      };
+    } catch (error) {
       throw error;
     }
   }

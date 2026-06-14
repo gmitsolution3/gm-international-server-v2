@@ -1,8 +1,11 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ScholarshipPackage } from '../scholarship.schema';
-
 
 @Injectable()
 export class ScholarshipPackageService {
@@ -14,7 +17,7 @@ export class ScholarshipPackageService {
   async getScholarshipPackageManagement() {
     try {
       const data = await this.scholarshipPackageModel
-        .find()
+        .find({ isInternationalStudent: false })
         .sort({ createdAt: -1 })
         .exec();
       return {
@@ -30,7 +33,7 @@ export class ScholarshipPackageService {
   async getScholarshipHomePagePkg() {
     try {
       const data = await this.scholarshipPackageModel
-        .find()
+        .find({ isInternationalStudent: false })
         .sort({ createdAt: -1 })
         .limit(3)
         .exec();
@@ -45,12 +48,12 @@ export class ScholarshipPackageService {
     }
   }
 
-  async getScholarshipPkgDetails(id:string){
-    try{
-      const data = await this.scholarshipPackageModel.findById(id)
+  async getScholarshipPkgDetails(id: string) {
+    try {
+      const data = await this.scholarshipPackageModel.findById(id);
 
-      if(!data){
-        throw new NotFoundException("Scholarship package not found")
+      if (!data) {
+        throw new NotFoundException('Scholarship package not found');
       }
 
       return {
@@ -58,11 +61,9 @@ export class ScholarshipPackageService {
         message: 'Scholarship package found successfully',
         data,
       };
-
-    }catch(error){
-      throw new Error(error.message)
+    } catch (error) {
+      throw new Error(error.message);
     }
-
   }
 
   async createScholarshipPackage(body: any) {
@@ -211,5 +212,39 @@ export class ScholarshipPackageService {
         'Failed to fetch scholarship filter data',
       );
     }
+  }
+
+  // international
+  async getInternationalHomeStudentPackage() {
+    try {
+      {
+        const data = await this.scholarshipPackageModel
+          .find({ isInternationalStudent: true })
+          .sort({ createdAt: -1 })
+          .limit(3)
+          .lean()
+          .exec();
+        return {
+          success: true,
+          data,
+        };
+      }
+    } catch (error) {}
+  }
+  
+  async getInternationalAllPackage() {
+    try {
+      {
+        const data = await this.scholarshipPackageModel
+          .find({ isInternationalStudent: true })
+          .sort({ createdAt: -1 })
+          .lean()
+          .exec();
+        return {
+          success: true,
+          data,
+        };
+      }
+    } catch (error) {}
   }
 }

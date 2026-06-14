@@ -42,8 +42,8 @@ export class ScholarshipPackageController {
 
   // details-api-> scholarship-package/api/v1/pkg-details/:id
   @Get('pkg-details/:id')
-  async getScholarShipPkgDetails(@Param('id') id:string){
-    return await this.scholarshipPackageService.getScholarshipPkgDetails(id)
+  async getScholarShipPkgDetails(@Param('id') id: string) {
+    return await this.scholarshipPackageService.getScholarshipPkgDetails(id);
   }
   // create-api-> scholarship-package/api/v1/create-pkg
   @Post('create-pkg')
@@ -88,5 +88,18 @@ export class ScholarshipPackageController {
   @Get('get-scholarship-filtered')
   async getScholarshipFiltered() {
     return await this.scholarshipPackageService.searchQueryData();
+  }
+
+  // get international package
+  // scholarship-package/api/v1/get-international-home-pkg
+  @Get('get-international-home-pkg')
+  async getInternationalHomePkg() {
+    return await this.scholarshipPackageService.getInternationalHomeStudentPackage();
+  }
+
+  // scholarship-package/api/v1/get-international-all-pkg
+  @Get('get-international-all-pkg')
+  async getInternationalAllPkg() {
+    return await this.scholarshipPackageService.getInternationalAllPackage();
   }
 }

@@ -10,7 +10,8 @@ import { TouristModule } from './modules/tourist/tourist.module';
 import { SettingModule } from './modules/setting/setting.module';
 import { RootUserModules } from './modules/user/user.module';
 import { FacebookCapiService } from './common/facebook-capi/facebook-capi.service';
-
+import { UmrahHajjModule } from './modules/umrah-hajj/umrah-hajj.module';
+import { LiveChatModule } from './modules/live-chat/liveChat.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { FacebookCapiService } from './common/facebook-capi/facebook-capi.servic
     TouristModule,
     SettingModule,
     RootUserModules,
+    UmrahHajjModule,
+    LiveChatModule,
   ],
   providers: [FacebookCapiService],
 })

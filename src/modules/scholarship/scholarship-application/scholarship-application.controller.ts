@@ -73,4 +73,11 @@ export class ScholarshipApplicationController {
   async deleteApplication(@Param('id') id: string) {
     return await this.scholarshipApplicationService.deleteApplication(id);
   }
+
+  // admin dashboard stats
+  // api will be -> get-> scholarship-application/api/v1/get-dashboard-stats
+  @Get('get-dashboard-stats')
+  async getDashboardStats() {
+    return await this.scholarshipApplicationService.getAdminDashboardStats();
+  }
 }
