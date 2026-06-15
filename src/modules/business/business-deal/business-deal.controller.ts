@@ -44,6 +44,7 @@ export class BusinessDealController {
     @Body()
     updateBusinessDealDto: UpdateBusinessDealDto,
   ) {
+
     return this.businessDealService.updateDeal(id, updateBusinessDealDto);
   }
 

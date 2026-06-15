@@ -84,4 +84,11 @@ export class BusinessPackageController {
   remove(@Param('id') id: string) {
     return this.businessPackageService.deletePackage(id);
   }
+
+  // get all packages
+  // GET -> business-package/api/v1/get/b2b-business-packages
+  @Get('get/b2b-business-packages')
+  getB2BBusinessPkg() {
+    return this.businessPackageService.getB2BBusinessPkg();
+  }
 }

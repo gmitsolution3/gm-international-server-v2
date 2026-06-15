@@ -9,7 +9,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { MedicalPackageService } from './medical-package.service';
-import { CreateMedicalPackageDto, FilterMedicalPackageDto } from './dto/create-medical-package.dto';
+import {
+  CreateMedicalPackageDto,
+  FilterMedicalPackageDto,
+} from './dto/create-medical-package.dto';
 import { UpdateMedicalPackageDto } from './dto/update-medical-package.dto';
 
 // apis
@@ -38,6 +41,7 @@ export class MedicalPackageController {
   findAll() {
     return this.medicalPackageService.findAll();
   }
+
   @Get('get/home-medical-pkg')
   findHomeMedicalPkg() {
     return this.medicalPackageService.findHomeMedicalPkg();
@@ -86,5 +90,13 @@ export class MedicalPackageController {
   @Delete('del-medical-pkg/:id')
   remove(@Param('id') id: string) {
     return this.medicalPackageService.remove(id);
+  }
+
+  // for b2b
+
+  // api will be ->  medical-pkg/api/v1/get/b2b-medical-pkg
+  @Get('get/b2b-medical-pkg')
+  getB2BMedicalPackage() {
+    return this.medicalPackageService.findAll();
   }
 }

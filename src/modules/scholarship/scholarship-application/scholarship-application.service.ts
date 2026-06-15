@@ -87,8 +87,6 @@ export class ScholarshipApplicationService {
   // CREATE
   async createApplication(body: any) {
     try {
-      console.log({ body });
-
       const data = await this.scholarshipApplicationModel.create(body);
       return {
         success: true,
@@ -111,8 +109,6 @@ export class ScholarshipApplicationService {
           new: true,
         },
       );
-
-      console.log({ data });
       if (!data) {
         throw new NotFoundException('Scholarship application not found');
       }

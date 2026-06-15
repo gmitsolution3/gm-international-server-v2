@@ -12,6 +12,7 @@ import { RootUserModules } from './modules/user/user.module';
 import { FacebookCapiService } from './common/facebook-capi/facebook-capi.service';
 import { UmrahHajjModule } from './modules/umrah-hajj/umrah-hajj.module';
 import { LiveChatModule } from './modules/live-chat/liveChat.module';
+import { B2BPackagesModule } from './modules/b2b/b2bPackages.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { LiveChatModule } from './modules/live-chat/liveChat.module';
     RootUserModules,
     UmrahHajjModule,
     LiveChatModule,
+    B2BPackagesModule,
   ],
   providers: [FacebookCapiService],
 })

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateMedicalPackageDto } from './dto/create-medical-package.dto';
@@ -28,10 +33,12 @@ export class MedicalPackageService {
     }
   }
 
-  // সব প্যাকেজ একসাথে খোঁজার জন্য
   async findAll() {
     try {
-      const data = await this.medicalPkgModel.find().sort({ createdAt: -1 }).exec();
+      const data = await this.medicalPkgModel
+        .find()
+        .sort({ createdAt: -1 })
+        .exec();
       return {
         success: true,
         data,
@@ -42,6 +49,7 @@ export class MedicalPackageService {
       );
     }
   }
+
   async findHomeMedicalPkg() {
     try {
       const data = await this.medicalPkgModel
@@ -262,6 +270,27 @@ export class MedicalPackageService {
       throw new InternalServerErrorException(
         'Failed to delete medical package',
       );
+    }
+  }
+
+  // get b2b medical package
+  async getB2BMedicalPackage() {
+    try {
+      const data = await this.medicalPkgModel
+        .find()
+        .select({ description: 0 })
+        .lean()
+        .exec();
+      return { success: true, message: 'find b2b pkg', data };
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Failed to fetch tourist package');
     }
   }
 }

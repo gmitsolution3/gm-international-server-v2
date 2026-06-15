@@ -221,4 +221,25 @@ export class BusinessPackageService {
       );
     }
   }
+
+  // get b2b business package
+  async getB2BBusinessPkg() {
+    try {
+      const data = await this.businessPackageModel
+        .find()
+        .select({ hotelName: 0, hotelRating: 0, description: 0, photo: 0 })
+        .lean()
+        .exec();
+      return { success: true, message: 'find b2b pkg', data };
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Failed to fetch tourist package');
+    }
+  }
 }

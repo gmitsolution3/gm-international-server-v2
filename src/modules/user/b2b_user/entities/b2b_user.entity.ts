@@ -33,6 +33,8 @@ export type B2bUserDocument = HydratedDocument<B2bUser>;
 
 @Schema({
   timestamps: true,
+  collection: 'B2B_users',
+  versionKey: false,
 })
 export class B2bUser {
   @Prop({
@@ -40,12 +42,6 @@ export class B2bUser {
     trim: true,
   })
   userName: string;
-
-  @Prop({
-    required: true,
-    trim: true,
-  })
-  username: string;
 
   @Prop({
     required: true,

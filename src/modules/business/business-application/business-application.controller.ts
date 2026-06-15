@@ -64,4 +64,11 @@ export class BusinessApplicationController {
   remove(@Param('id') id: string) {
     return this.businessApplicationService.deleteBusinessApp(id);
   }
+
+  // admin analysis
+  // get business-application/api/v1/get-dashboard/stats
+  @Get('get-dashboard/stats')
+  getDashboardStats() {
+    return this.businessApplicationService.getDashboardStats();
+  }
 }
