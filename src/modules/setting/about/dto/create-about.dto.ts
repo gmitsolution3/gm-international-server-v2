@@ -28,12 +28,4 @@ export class CreateAboutDto {
   @IsPositive()
   @IsNotEmpty()
   order_index: number;
-
-  @IsDateString()
-  @IsNotEmpty()
-  createdAt: string;
-
-  @IsDateString()
-  @IsNotEmpty()
-  updateAt: string;
 }

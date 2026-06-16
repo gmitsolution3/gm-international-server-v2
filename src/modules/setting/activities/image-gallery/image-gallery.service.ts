@@ -7,25 +7,27 @@ import { ImageGallery } from './entities/image-gallery.entity';
 
 import { CreateImageGalleryDto } from './dto/create-image-gallery.dto';
 import { UpdateImageGalleryDto } from './dto/update-image-gallery.dto';
+import { VideoGallery } from '../video-gallery/entities/video-gallery.entity';
 
 @Injectable()
 export class ImageGalleryService {
   constructor(
     @InjectModel(ImageGallery.name)
     private readonly imageGalleryModel: Model<ImageGallery>,
+
+    @InjectModel(VideoGallery.name)
+    private readonly videoGalleryModel: Model<VideoGallery>,
   ) {}
 
-  async createImage(createImageGalleryDto: CreateImageGalleryDto) {
-    try {
-      const data = await this.imageGalleryModel.create(createImageGalleryDto);
-      return {
-        success: true,
-        message: 'Image created successfully',
-        data,
-      };
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to create image');
-    }
+  async createImage(createImageGalleryDtos: CreateImageGalleryDto[]) {
+    const data = await this.imageGalleryModel.insertMany(
+      createImageGalleryDtos,
+    );
+
+    return {
+      success: true,
+      data,
+    };
   }
 
   async findAll() {
@@ -72,10 +74,11 @@ export class ImageGalleryService {
     }
   }
 
-  async remove(id: string) {
+  async remove(ids: string[]) {
     try {
-      await this.imageGalleryModel.findByIdAndDelete(id).exec();
-
+      const result = await this.imageGalleryModel.deleteMany({
+        _id: { $in: ids },
+      });
       return {
         success: true,
         message: 'Image deleted successfully',
@@ -83,5 +86,18 @@ export class ImageGalleryService {
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete image');
     }
+  }
+
+  async mediaActivities() {
+    const [videos, gallery] = await Promise.all([
+      this.videoGalleryModel.find({}).sort({ createdAt: -1 }).lean().exec(),
+      this.imageGalleryModel.find({}).sort({ createdAt: -1 }).lean().exec(),
+    ]);
+
+    return {
+      success: true,
+      message: 'Data found',
+      data: { resultVideo: videos, resultGallery: gallery },
+    };
   }
 }

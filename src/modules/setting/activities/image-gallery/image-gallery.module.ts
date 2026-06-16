@@ -6,11 +6,16 @@ import {
   ImageGallery,
   ImageGallerySchema,
 } from './entities/image-gallery.entity';
+import {
+  VideoGallery,
+  VideoGallerySchema,
+} from '../video-gallery/entities/video-gallery.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: ImageGallery.name, schema: ImageGallerySchema },
+      { name: VideoGallery.name, schema: VideoGallerySchema },
     ]),
   ],
   controllers: [ImageGalleryController],

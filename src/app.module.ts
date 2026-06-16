@@ -13,6 +13,8 @@ import { FacebookCapiService } from './common/facebook-capi/facebook-capi.servic
 import { UmrahHajjModule } from './modules/umrah-hajj/umrah-hajj.module';
 import { LiveChatModule } from './modules/live-chat/liveChat.module';
 import { B2BPackagesModule } from './modules/b2b/b2bPackages.module';
+import { CscaApplicationsModule } from './modules/csca/csca-applications/csca-applications.module';
+import { CscaPackageModule } from './modules/csca/csca-package/csca-package.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { B2BPackagesModule } from './modules/b2b/b2bPackages.module';
     UmrahHajjModule,
     LiveChatModule,
     B2BPackagesModule,
+    CscaApplicationsModule,
+    CscaPackageModule,
   ],
   providers: [FacebookCapiService],
 })

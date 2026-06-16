@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 
 import { AboutService } from './about.service';
@@ -25,7 +26,7 @@ export class AboutController {
   constructor(private readonly aboutService: AboutService) {}
 
   // CREATE ABOUT
-  // api will be -> about/api/v1/create-team-member
+  // api will be -> about-team/api/v1/create-team-member
   @Post('create-team-member')
   create(
     @Body()
@@ -35,7 +36,7 @@ export class AboutController {
   }
 
   // GET ALL ABOUT
-  // api will be -> about/api/v1/get/all-team-member
+  // api will be -> about-team/api/v1/get/all-team-member
   @Get('get/all-team-member')
   findAll() {
     return this.aboutService.findAll();
@@ -49,8 +50,8 @@ export class AboutController {
   }
 
   // UPDATE ABOUT
-  // api will be -> about/api/v1/upd-about/:id
-  @Patch('upd-about/:id')
+  // api will be -> about-team/api/v1/upd-about/:id
+  @Put('upd-about/:id')
   update(
     @Param('id') id: string,
     @Body()
@@ -60,7 +61,7 @@ export class AboutController {
   }
 
   // DELETE ABOUT
-  // api will be -> about/api/v1/del-about/:id
+  // api will be -> about-team/api/v1/del-about/:id
   @Delete('del-about/:id')
   remove(@Param('id') id: string) {
     return this.aboutService.remove(id);

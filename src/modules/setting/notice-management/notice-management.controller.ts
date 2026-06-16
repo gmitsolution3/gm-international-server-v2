@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 
 import { NoticeManagementService } from './notice-management.service';
@@ -50,6 +51,12 @@ export class NoticeManagementController {
     return this.noticeManagementService.findOne(id);
   }
 
+  // api will be -> notice-management/api/v1/get-notice
+  @Get('get-notice')
+  async getNotice(@Query('query') query: string) {
+    // Jodi query parameter optional hoy, tahole default value handle korte পারো
+    return this.noticeManagementService.getNotice(query);
+  }
   // UPDATE NOTICE
   // api will be -> notice-management/api/v1/upd-notice/:id
   @Patch('upd-notice/:id')

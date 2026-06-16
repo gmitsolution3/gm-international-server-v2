@@ -25,13 +25,13 @@ export class ImageGalleryController {
   constructor(private readonly imageGalleryService: ImageGalleryService) {}
 
   // CREATE IMAGE
-  // api will be -> image-gallery/api/v1/create-image
+  // api will be -> image-gallery/api/v1/create/image-gallery
   @Post('create/image-gallery')
   create(
     @Body()
-    createImageGalleryDto: CreateImageGalleryDto,
+    createImageGalleryDtos: CreateImageGalleryDto[],
   ) {
-    return this.imageGalleryService.createImage(createImageGalleryDto);
+    return this.imageGalleryService.createImage(createImageGalleryDtos);
   }
 
   // GET ALL IMAGE
@@ -60,9 +60,15 @@ export class ImageGalleryController {
   }
 
   // DELETE IMAGE
-  // api will be -> image-gallery/api/v1/del-image/:id
-  @Delete('del-image/:id')
-  remove(@Param('id') id: string) {
-    return this.imageGalleryService.remove(id);
+  // api will be -> image-gallery/api/v1/del-images
+  @Delete('del-images')
+  remove(@Body('ids') ids: string[]) {
+    return this.imageGalleryService.remove(ids);
+  }
+
+  // api will be -> image-gallery/api/v1/get-media-activities
+  @Get('get-media-activities')
+  mediaActivities() {
+    return this.imageGalleryService.mediaActivities();
   }
 }

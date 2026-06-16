@@ -15,7 +15,6 @@ export class NoticeManagementService {
     private readonly noticeManagementModel: Model<NoticeManagement>,
   ) {}
 
-  // নতুন নোটিশ তৈরি করার মেথড
   async createNotice(createNoticeManagementDto: CreateNoticeManagementDto) {
     try {
       const data = await this.noticeManagementModel.create(
@@ -55,6 +54,16 @@ export class NoticeManagementService {
         success: true,
         data,
       };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch notice');
+    }
+  }
+
+  async getNotice(query: string) {
+    const queryFor = { noticeFor: query };
+    try {
+      const data = await this.noticeManagementModel.find(queryFor).exec();
+      return { success: true, message: 'Get notice', data };
     } catch (error) {
       throw new InternalServerErrorException('Failed to fetch notice');
     }
