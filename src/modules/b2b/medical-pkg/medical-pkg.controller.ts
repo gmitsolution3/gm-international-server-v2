@@ -13,7 +13,8 @@ export class MedicalPkgController {
     return this.medicalPkgService.create(createMedicalPkgDto);
   }
 
-  @Get()
+  // api will be -> b2b-medical-pkg/api/v1/get-all-med-pkg
+  @Get('get-all-med-pkg')
   findAll() {
     return this.medicalPkgService.findAll();
   }

@@ -76,8 +76,29 @@ export class BusinessPkgService {
     }
   }
 
-  findAll() {
-    return `This action returns all businessPkg`;
+  async findAll() {
+    try {
+      const data = await this.businessDealModel
+        .find()
+        .populate('packageIds')
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        message: 'find student b2b packages',
+        data: data[0],
+      };
+    } catch (error) {
+      console.log({ error });
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException("Could't find any pkg");
+    }
   }
 
   findOne(id: number) {

@@ -73,17 +73,27 @@ export class TouristPkgService {
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return "Hello world"
+      const data = await this.TouristPkgModel.find()
+        .populate('packageIds')
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        message: 'find student b2b packages',
+        data: data[0],
+      };
     } catch (error) {
+      console.log({ error });
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException
       ) {
         throw error;
       }
-      throw new InternalServerErrorException('Failed to fetch tourist package');
+      throw new InternalServerErrorException("Could't find any pkg");
     }
   }
 

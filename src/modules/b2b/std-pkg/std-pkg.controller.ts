@@ -22,7 +22,8 @@ export class StdPkgController {
     return this.stdPkgService.create(createStdPkgDto);
   }
 
-  @Get()
+  // api will be ->std-pkg/api/v1/find-b2b-all-pkg
+  @Get('find-b2b-all-pkg')
   findAll() {
     return this.stdPkgService.findAll();
   }

@@ -10,9 +10,11 @@ export class ChatService {
     private readonly chatModel: Model<Chat>,
   ) {}
 
-  async createChat(userId: string) {
+  async createChat(userId: string, userName: string, phone: string) {
     return await this.chatModel.create({
       userId,
+      userName,
+      phone,
       status: 'pending',
     });
   }

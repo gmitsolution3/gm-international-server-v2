@@ -26,7 +26,8 @@ export class Chat {
     default: 'pending',
   })
   status: string;
-
+  userName: string;
+  phone: string;
 
   @Prop()
   acceptedBy?: Types.ObjectId;

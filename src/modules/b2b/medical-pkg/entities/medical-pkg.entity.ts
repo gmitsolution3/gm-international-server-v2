@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { MedicalPackage } from '../../../medical/medical-package/entities/medical-package.entity';
 
 export type B2BMedicalPkgDocument = B2BMedicalPkg & Document;
 
@@ -8,7 +9,10 @@ export class B2BMedicalPkg {
   @Prop({ type: String, required: true })
   action: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Package' }], required: true })
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: MedicalPackage.name }],
+    required: true,
+  })
   packageIds: Types.ObjectId[];
 }
 

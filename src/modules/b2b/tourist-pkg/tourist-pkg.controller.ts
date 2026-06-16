@@ -13,7 +13,8 @@ export class TouristPkgController {
     return this.touristPkgService.create(createTouristPkgDto);
   }
 
-  @Get()
+  // api will -> be tourist-pkg/api/v1/all-tourist-pkg
+  @Get('all-tourist-pkg')
   findAll() {
     return this.touristPkgService.findAll();
   }

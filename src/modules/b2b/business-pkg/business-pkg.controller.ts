@@ -13,7 +13,8 @@ export class BusinessPkgController {
     return this.businessPkgService.create(createBusinessPkgDto);
   }
 
-  @Get()
+  // api will be -> b2b/business-pkg/api/v1/get-all-pkg
+  @Get('get-all-pkg')
   findAll() {
     return this.businessPkgService.findAll();
   }

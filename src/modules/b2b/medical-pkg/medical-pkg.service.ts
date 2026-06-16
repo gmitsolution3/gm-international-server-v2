@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMedicalPkgDto } from './dto/create-medical-pkg.dto';
 import { UpdateMedicalPkgDto } from './dto/update-medical-pkg.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -68,8 +73,28 @@ export class MedicalPkgService {
       throw new InternalServerErrorException('Failed to save standard package');
     }
   }
-  findAll() {
-    return `This action returns all medicalPkg`;
+  async findAll() {
+    try {
+      const data = await this.B2BMedicalPkgModel.find()
+        .populate('packageIds')
+        .lean()
+        .exec();
+
+      return {
+        success: true,
+        message: 'find student b2b packages',
+        data: data[0],
+      };
+    } catch (error) {
+      console.log({ error });
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException("Could't find any pkg");
+    }
   }
 
   findOne(id: number) {

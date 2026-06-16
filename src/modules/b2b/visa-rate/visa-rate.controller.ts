@@ -21,8 +21,8 @@ export class VisaRateController {
     return this.VisaRateService.create(createVisaPackageDto);
   }
 
-  // GET: http://localhost:8080/visa-rate/api/v1
-  @Get()
+  // GET: http://localhost:8080/visa-rate/api/v1/get-all
+  @Get('get-all')
   findAll() {
     return this.VisaRateService.findAll();
   }

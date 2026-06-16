@@ -16,10 +16,20 @@ export class ChatController {
   // POST /chats/create
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  async createChat(@Body('userId') userId: string) {
-    return await this.chatService.createChat(userId);
+  async createChat(
+    @Body('userId')
+    createChatDto: {
+      userId: string;
+      userName: string;
+      phone: string;
+    },
+  ) {
+    return await this.chatService.createChat(
+      createChatDto.userId,
+      createChatDto.userName,
+      createChatDto.phone,
+    );
   }
-
 
   @Patch(':id/accept')
   @HttpCode(HttpStatus.OK)
