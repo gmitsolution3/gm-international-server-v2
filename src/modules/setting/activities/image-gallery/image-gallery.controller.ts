@@ -66,6 +66,12 @@ export class ImageGalleryController {
     return this.imageGalleryService.remove(ids);
   }
 
+  // image-gallery/api/v1/del-single-image
+  @Delete('del-single-image/:id')
+  removeSingleImage(@Param('id') id: string) {
+    return this.imageGalleryService.removeSingleImage(id);
+  }
+
   // api will be -> image-gallery/api/v1/get-media-activities
   @Get('get-media-activities')
   mediaActivities() {

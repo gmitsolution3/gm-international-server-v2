@@ -38,8 +38,13 @@ export class User {
   phone: string;
 
   @Prop({
+    required: false,
+  })
+  branchName?: string;
+
+  @Prop({
     default: 'user',
-    enum: ['user', 'admin', "office_admin"],
+    enum: ['user', 'admin', 'office_admin'],
   })
   userRole: string;
 

@@ -102,4 +102,10 @@ export class ScholarshipPackageController {
   async getInternationalAllPkg() {
     return await this.scholarshipPackageService.getInternationalAllPackage();
   }
+
+  // scholarship-package/api/v1/student-programs/unique
+  @Get('student-programs/unique')
+  async getStudentUniqueProgram() {
+    return this.scholarshipPackageService.getStudentUniqueProgram();
+  }
 }

@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -85,6 +90,22 @@ export class ImageGalleryService {
       };
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete image');
+    }
+  }
+
+  async removeSingleImage(id: string) {
+    try {
+      const data = await this.imageGalleryModel.findByIdAndDelete(id);
+      return { success: true, message: 'Image deleted successful!!' };
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException("Could't remove the image");
     }
   }
 

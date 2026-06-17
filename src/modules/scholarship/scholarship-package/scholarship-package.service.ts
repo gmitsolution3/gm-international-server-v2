@@ -231,7 +231,7 @@ export class ScholarshipPackageService {
       }
     } catch (error) {}
   }
-  
+
   async getInternationalAllPackage() {
     try {
       {
@@ -246,5 +246,40 @@ export class ScholarshipPackageService {
         };
       }
     } catch (error) {}
+  }
+
+  async getStudentUniqueProgram() {
+    const result = await this.scholarshipPackageModel.aggregate([
+      {
+        $unwind: '$programs',
+      },
+      {
+        $match: {
+          programs: { $nin: [null, ''] },
+        },
+      },
+      {
+        $group: {
+          _id: '$programs',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          program: '$_id',
+        },
+      },
+      {
+        $sort: {
+          program: 1,
+        },
+      },
+    ]);
+
+    return {
+      success: true,
+      message: 'Unique programs fetched',
+      data: result,
+    };
   }
 }

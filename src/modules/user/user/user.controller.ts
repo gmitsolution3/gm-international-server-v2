@@ -27,6 +27,8 @@ export class UserController {
   getUserRole(@Query('email') email: string) {
     return this.userService.getUserRole(email);
   }
+
+  // /user/get-all-users
   @Get('get-all-users')
   getAllUsers() {
     return this.userService.getAllUsers();

@@ -15,6 +15,7 @@ import { LiveChatModule } from './modules/live-chat/liveChat.module';
 import { B2BPackagesModule } from './modules/b2b/b2bPackages.module';
 import { CscaApplicationsModule } from './modules/csca/csca-applications/csca-applications.module';
 import { CscaPackageModule } from './modules/csca/csca-package/csca-package.module';
+import { AccountModules } from './modules/accounts/account.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CscaPackageModule } from './modules/csca/csca-package/csca-package.modu
     B2BPackagesModule,
     CscaApplicationsModule,
     CscaPackageModule,
+    AccountModules,
   ],
   providers: [FacebookCapiService],
 })
