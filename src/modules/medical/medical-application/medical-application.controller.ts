@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { MedicalApplicationService } from './medical-application.service';
 import {
@@ -33,11 +34,13 @@ export class MedicalApplicationController {
     return this.medicalApplicationService.create(createMedicalApplicationDto);
   }
 
+  // get-> medical-application/api/v1/get-all
   @Get('get-all')
   findAll() {
     return this.medicalApplicationService.findAll();
   }
 
+  // get-> medical-application/api/v1/get-single/:id
   @Get('get-single/:id')
   findOne(@Param('id') id: string) {
     return this.medicalApplicationService.findOne(id);
@@ -53,6 +56,13 @@ export class MedicalApplicationController {
     return this.medicalApplicationService.getDashboardStats();
   }
 
+  // the api will be -> medical-application/api/v1/user-dashboard-stats
+  @Get('user-dashboard-stats')
+  getUserDashboardStats(@Query('email') email: string) {
+    return this.medicalApplicationService.getUserDashboardStats(email);
+  }
+
+  // the api will be -> medical-application/api/v1/upd-application/:id
   @Patch('upd-application/:id')
   update(
     @Param('id') id: string,
@@ -63,6 +73,8 @@ export class MedicalApplicationController {
       updateMedicalApplicationDto,
     );
   }
+
+  // the api will be -> medical-application/api/v1/upd-appointment/payment
   @Patch('upd-appointment/payment/:id')
   updatePayment(@Param('id') id: string, @Body() updateData: UpdatePaymentDto) {
     return this.medicalApplicationService.updatePaymentStatus(id, updateData);

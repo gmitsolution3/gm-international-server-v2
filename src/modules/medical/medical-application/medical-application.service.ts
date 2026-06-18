@@ -43,7 +43,10 @@ export class MedicalApplicationService {
 
   async findAll() {
     try {
-      const data = await this.medicalAppModel.find().exec();
+      const data = await this.medicalAppModel
+        .find()
+        .sort({ createdAt: -1 })
+        .exec();
       return {
         success: true,
         data,
@@ -134,7 +137,6 @@ export class MedicalApplicationService {
         {
           $set: {
             ...updateData,
-            updatedAt: new Date(),
           },
         },
         {
@@ -245,6 +247,191 @@ export class MedicalApplicationService {
 
         // Monthly Trend
         this.medicalAppModel.aggregate([
+          {
+            $addFields: {
+              submittedDate: {
+                $cond: [
+                  {
+                    $eq: [{ $type: '$createdAt' }, 'date'],
+                  },
+                  '$createdAt',
+                  {
+                    $cond: [
+                      {
+                        $eq: [{ $type: '$createdAt' }, 'string'],
+                      },
+                      {
+                        $toDate: '$createdAt',
+                      },
+                      null,
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          {
+            $match: {
+              submittedDate: { $ne: null },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                year: {
+                  $year: '$submittedDate',
+                },
+                month: {
+                  $month: '$submittedDate',
+                },
+              },
+              count: {
+                $sum: 1,
+              },
+            },
+          },
+          {
+            $sort: {
+              '_id.year': -1,
+              '_id.month': -1,
+            },
+          },
+          {
+            $limit: 6,
+          },
+        ]),
+
+        this.medicalAppModel.countDocuments(),
+
+        this.medicalPackageModel.countDocuments(),
+      ]);
+
+      const statusCounts = statusStats.reduce(
+        (acc, cur) => {
+          if (cur._id) {
+            acc[cur._id.toLowerCase()] = cur.count;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      const paymentCounts = paymentStats.reduce(
+        (acc, cur) => {
+          if (cur._id) {
+            acc[cur._id.toLowerCase()] = cur.count;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      return {
+        documentCount: {
+          totalApplications,
+          totalApproved: statusCounts.approved || 0,
+          totalPending: statusCounts.pending || 0,
+          totalRejected: statusCounts.reject || 0,
+          totalHospitals,
+        },
+
+        paymentStats: {
+          pending: paymentCounts.pending || 0,
+          paid: paymentCounts.paid || 0,
+          delivered: paymentCounts.delivered || 0,
+          failed: paymentCounts.failed || 0,
+        },
+
+        recentApplications,
+        topHospitals,
+        monthlyTrend,
+      };
+    } catch (error) {
+      console.error(error);
+
+      throw new InternalServerErrorException('Failed to load dashboard stats');
+    }
+  }
+  async getUserDashboardStats(email: string) {
+    try {
+      const [
+        statusStats,
+        paymentStats,
+        recentApplications,
+        topHospitals,
+        monthlyTrend,
+        totalApplications,
+        totalHospitals,
+      ] = await Promise.all([
+        // Status Stats
+        this.medicalAppModel.aggregate([
+          {
+            $match: { createdBy: email },
+          },
+          {
+            $group: {
+              _id: '$appointmentStatus',
+              count: { $sum: 1 },
+            },
+          },
+        ]),
+
+        // Payment Stats
+        this.medicalAppModel.aggregate([
+          {
+            $match: { createdBy: email },
+          },
+          {
+            $group: {
+              _id: '$paymentStatus',
+              count: { $sum: 1 },
+            },
+          },
+        ]),
+
+        // Recent Applications
+        this.medicalAppModel
+          .find({ createdBy: email })
+          .sort({ createdAt: -1 })
+          .limit(10)
+          .select({
+            applicantId: 1,
+            patientName: 1,
+            email: 1,
+            phoneNumber: 1,
+            hospital_name: 1,
+            patient_disease: 1,
+            appointmentStatus: 1,
+            paymentStatus: 1,
+            createdAt: 1,
+          }),
+
+        // Top Hospitals
+        this.medicalAppModel.aggregate([
+          {
+            $match: { createdBy: email },
+          },
+          {
+            $group: {
+              _id: '$hospital_name',
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $sort: {
+              count: -1,
+            },
+          },
+          {
+            $limit: 5,
+          },
+        ]),
+
+        // Monthly Trend
+        this.medicalAppModel.aggregate([
+          {
+            $match: { createdBy: email },
+          },
           {
             $addFields: {
               submittedDate: {

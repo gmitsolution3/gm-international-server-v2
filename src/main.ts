@@ -13,7 +13,11 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
   await app.register(cors, {
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:3000',
+      'https://update-gm-international-client.vercel.app',
+      'https://www.gminternational.live',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
