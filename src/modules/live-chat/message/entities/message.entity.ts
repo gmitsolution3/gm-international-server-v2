@@ -7,6 +7,7 @@ export type MessageDocument = HydratedDocument<Message>;
 
 @Schema({
   timestamps: true,
+  versionKey: false
 })
 export class Message {
   @Prop({

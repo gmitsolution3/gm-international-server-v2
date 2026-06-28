@@ -11,6 +11,7 @@ export class ChatService {
   ) {}
 
   async createChat(userId: string, userName: string, phone: string) {
+    console.log({userName, phone})
     return await this.chatModel.create({
       userId,
       userName,

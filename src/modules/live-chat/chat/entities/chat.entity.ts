@@ -7,6 +7,7 @@ export type ChatDocument = HydratedDocument<Chat>;
 
 @Schema({
   timestamps: true,
+  versionKey: false,
 })
 export class Chat {
   @Prop({
@@ -26,7 +27,9 @@ export class Chat {
     default: 'pending',
   })
   status: string;
+  @Prop()
   userName: string;
+  @Prop()
   phone: string;
 
   @Prop()

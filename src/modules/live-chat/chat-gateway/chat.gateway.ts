@@ -49,7 +49,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.userSockets.set(userId, []);
       }
       this.userSockets.get(userId)?.push(client.id);
-
       // Check for existing chat immediately on connection
       await this.checkAndJoinExistingChat(client, userId);
 
@@ -61,8 +60,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       if (adminId) {
         client.join(`admin:${adminId}`);
-      
-
         if (!this.adminSockets.has(adminId)) {
           this.adminSockets.set(adminId, []);
         }
@@ -128,8 +125,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // Helper method to send admin dashboard data
   private async sendAdminDashboard(client: Socket, adminId: string) {
     try {
-      // Get pending chats (not accepted by anyone yet)
-    
+
       const pendingChats = await this.chatModel
         .find({
           status: 'pending',
@@ -234,12 +230,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         };
       }
 
+  
+
       // Create new chat with user info
       const chat: any = await this.chatService.createChat(
         payload.userId,
         payload.userName,
         payload.phone,
       );
+
 
 
       client.join(`chat:${chat._id}`);
