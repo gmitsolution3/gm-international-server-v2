@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { CreateMedicalPackageDto } from './dto/create-medical-package.dto';
 import { UpdateMedicalPackageDto } from './dto/update-medical-package.dto';
 import { MedicalPackage } from './entities/medical-package.entity';
+import { buildKeywordSearch } from '../../../common/utils/search.util';
 
 @Injectable()
 export class MedicalPackageService {
@@ -17,7 +18,6 @@ export class MedicalPackageService {
     private readonly medicalPkgModel: Model<MedicalPackage>,
   ) {}
 
-  // নতুন মেডিকেল প্যাকেজ তৈরি করার মেথড
   async createMedicalPkg(createMedicalPackageDto: CreateMedicalPackageDto) {
     try {
       const data = await this.medicalPkgModel.create(createMedicalPackageDto);
@@ -171,7 +171,6 @@ export class MedicalPackageService {
     }
   }
 
-  // আইডি দিয়ে নির্দিষ্ট একটি প্যাকেজ খোঁজার জন্য
   async findOne(id: string) {
     try {
       const data = await this.medicalPkgModel.findById(id).exec();
@@ -240,7 +239,6 @@ export class MedicalPackageService {
     }
   }
 
-  // আইডি দিয়ে প্যাকেজ আপডেট করার জন্য
   async update(id: string, updateMedicalPackageDto: UpdateMedicalPackageDto) {
     try {
       const data = await this.medicalPkgModel
@@ -258,7 +256,6 @@ export class MedicalPackageService {
     }
   }
 
-  // আইডি দিয়ে প্যাকেজ ডিলিট করার জন্য
   async remove(id: string) {
     try {
       await this.medicalPkgModel.findByIdAndDelete(id).exec();
@@ -292,5 +289,19 @@ export class MedicalPackageService {
 
       throw new InternalServerErrorException('Failed to fetch tourist package');
     }
+  }
+
+  // chat box query
+
+  async search(query: string) {
+    const filter = buildKeywordSearch(query, [
+      'hospital_name',
+      'country_name',
+      'city_name',
+      'provience',
+      'description',
+    ]);
+
+    return this.medicalPkgModel.find(filter).lean().exec();
   }
 }

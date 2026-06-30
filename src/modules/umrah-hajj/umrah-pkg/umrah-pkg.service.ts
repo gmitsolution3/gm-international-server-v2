@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { UmrahHajjPackage } from './entities/umrah-pkg.entity';
 import { CreateUmrahHajjPackageDto } from './dto/create-umrah-pkg.dto';
 import { UpdateUmrahPkgDto } from './dto/update-umrah-pkg.dto';
+import { buildKeywordSearch } from '../../../common/utils/search.util';
 
 @Injectable()
 export class UmrahService {
@@ -95,5 +96,23 @@ export class UmrahService {
         'Failed to create medical package',
       );
     }
+  }
+
+  // for the chat box searching
+  async search(query: string) {
+    const filter = buildKeywordSearch(query, [
+      'title',
+      'description',
+      'includes.value',
+    ]);
+
+    return this.umrahHajjPkgModel
+      .find({
+        package_status: 'active',
+        ...filter,
+      })
+      .select('title thumbnail price discount_price departure_date return_date')
+      .lean()
+      .exec();
   }
 }

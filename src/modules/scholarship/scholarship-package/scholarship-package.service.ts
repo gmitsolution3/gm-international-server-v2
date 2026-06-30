@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ScholarshipPackage } from '../scholarship.schema';
+import { buildKeywordSearch } from '../../../common/utils/search.util';
 
 @Injectable()
 export class ScholarshipPackageService {
@@ -281,5 +282,45 @@ export class ScholarshipPackageService {
       message: 'Unique programs fetched',
       data: result,
     };
+  }
+
+  // searching for chat box search
+
+  // async search(query: string) {
+  //   const keywords = query.trim().split(/\s+/).filter(Boolean);
+
+  //   return this.scholarshipPackageModel
+  //     .find({
+  //       status: 'active',
+  //       $and: keywords.map((keyword) => ({
+  //         $or: [
+  //           { universityName: { $regex: keyword, $options: 'i' } },
+  //           { country: { $regex: keyword, $options: 'i' } },
+  //           { city: { $regex: keyword, $options: 'i' } },
+  //           { description: { $regex: keyword, $options: 'i' } },
+  //           { universityDescription: { $regex: keyword, $options: 'i' } },
+  //         ],
+  //       })),
+  //     })
+  //     .lean()
+  //     .exec();
+  // }
+
+  async search(query: string) {
+    const filter = buildKeywordSearch(query, [
+      'universityName',
+      'country',
+      'city',
+      'description',
+      'universityDescription',
+    ]);
+
+    return this.scholarshipPackageModel
+      .find({
+        status: 'active',
+        ...filter,
+      })
+      .lean()
+      .exec();
   }
 }

@@ -15,5 +15,6 @@ import {
   ],
   controllers: [BusinessPackageController],
   providers: [BusinessPackageService],
+  exports: [BusinessPackageService],
 })
 export class BusinessPackageModule {}

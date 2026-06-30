@@ -131,20 +131,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           status: 'pending',
           $or: [{ acceptedBy: { $exists: false } }, { acceptedBy: null }],
         })
-        .populate('userId', 'name phone email')
         .sort({ createdAt: -1 });
 
-      // Get active chats for this admin
+      
       const activeChats = await this.chatModel
         .find({
           acceptedBy: adminId,
           status: 'accepted',
         })
-        .populate('userId', 'name phone email')
-        .select('userId status lastMessage lastMessageAt updatedAt')
+        .select(
+          'userId status userName phone lastMessage lastMessageAt updatedAt',
+        )
         .sort({ updatedAt: -1 });
-
-    
 
       client.emit('pendingChats', pendingChats);
 

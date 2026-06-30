@@ -14,6 +14,7 @@ import { BusinessPackage } from './entities/business-package.entity';
 import { CreateBusinessPackageDto } from './dto/create-business-package.dto';
 
 import { UpdateBusinessPackageDto } from './dto/update-business-package.dto';
+import { buildKeywordSearch } from '../../../common/utils/search.util';
 
 @Injectable()
 export class BusinessPackageService {
@@ -241,5 +242,21 @@ export class BusinessPackageService {
 
       throw new InternalServerErrorException('Failed to fetch tourist package');
     }
+  }
+
+  // search for chat box result
+
+  async search(query: string) {
+    const filter = buildKeywordSearch(query, [
+      'title',
+      'industry',
+      'investmentType',
+      'country',
+      'city',
+      'location',
+      'description',
+    ]);
+
+    return this.businessPackageModel.find(filter).lean().exec();
   }
 }

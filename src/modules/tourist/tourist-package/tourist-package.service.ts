@@ -17,6 +17,7 @@ import {
   TouristQuery,
   TouristQueryDocument,
 } from '../custom-application/entities/custom-application.entity';
+import { buildKeywordSearch } from '../../../common/utils/search.util';
 
 @Injectable()
 export class TouristPackageService {
@@ -438,5 +439,20 @@ export class TouristPackageService {
         'Failed to delete tourist package',
       );
     }
+  }
+
+  // chat box search query
+
+  async search(query: string) {
+    const filter = buildKeywordSearch(query, [
+      'p_title',
+      'country',
+      'start_form',
+      'tour_plan.destination',
+      'tour_plan.sub_destination',
+      'description',
+    ]);
+
+    return this.touristPackageModel.find(filter).lean().exec();
   }
 }

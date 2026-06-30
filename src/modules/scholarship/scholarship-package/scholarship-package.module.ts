@@ -15,5 +15,6 @@ import {
   ],
   controllers: [ScholarshipPackageController],
   providers: [ScholarshipPackageService],
+  exports: [ScholarshipPackageService],
 })
 export class ScholarshipPackageModule {}

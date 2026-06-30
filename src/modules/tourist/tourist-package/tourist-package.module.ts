@@ -25,5 +25,6 @@ import {
   ],
   controllers: [TouristPackageController],
   providers: [TouristPackageService],
+  exports: [TouristPackageService]
 })
 export class TouristPackageModule {}

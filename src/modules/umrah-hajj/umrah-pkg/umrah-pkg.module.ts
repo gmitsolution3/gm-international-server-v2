@@ -15,5 +15,6 @@ import { UmrahService } from './umrah-pkg.service';
   ],
   controllers: [UmrahController],
   providers: [UmrahService],
+  exports:[UmrahService]
 })
 export class UmrahModule {}
