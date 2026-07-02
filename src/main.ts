@@ -20,7 +20,7 @@ async function bootstrap() {
       'https://www.gminternational.live', 
     ],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], 
   });
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT ?? 8080, '0.0.0.0');
