@@ -17,7 +17,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://update-gm-international-client.vercel.app',
       'https://gm-international-v2.vercel.app',
-      'https://www.gminternational.live',
+      'https://www.gminternational.live', 
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
