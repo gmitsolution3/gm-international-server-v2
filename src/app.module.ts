@@ -16,6 +16,7 @@ import { B2BPackagesModule } from './modules/b2b/b2bPackages.module';
 import { CscaApplicationsModule } from './modules/csca/csca-applications/csca-applications.module';
 import { CscaPackageModule } from './modules/csca/csca-package/csca-package.module';
 import { AccountModules } from './modules/accounts/account.module';
+import { VisaModule } from './modules/visa/visa.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AccountModules } from './modules/accounts/account.module';
     CscaApplicationsModule,
     CscaPackageModule,
     AccountModules,
+    VisaModule,
   ],
   providers: [FacebookCapiService],
 })
