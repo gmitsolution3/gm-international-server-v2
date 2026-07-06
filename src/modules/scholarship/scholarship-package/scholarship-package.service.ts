@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -284,28 +285,6 @@ export class ScholarshipPackageService {
     };
   }
 
-  // searching for chat box search
-
-  // async search(query: string) {
-  //   const keywords = query.trim().split(/\s+/).filter(Boolean);
-
-  //   return this.scholarshipPackageModel
-  //     .find({
-  //       status: 'active',
-  //       $and: keywords.map((keyword) => ({
-  //         $or: [
-  //           { universityName: { $regex: keyword, $options: 'i' } },
-  //           { country: { $regex: keyword, $options: 'i' } },
-  //           { city: { $regex: keyword, $options: 'i' } },
-  //           { description: { $regex: keyword, $options: 'i' } },
-  //           { universityDescription: { $regex: keyword, $options: 'i' } },
-  //         ],
-  //       })),
-  //     })
-  //     .lean()
-  //     .exec();
-  // }
-
   async search(query: string) {
     const filter = buildKeywordSearch(query, [
       'universityName',
@@ -322,5 +301,56 @@ export class ScholarshipPackageService {
       })
       .lean()
       .exec();
+  }
+
+  // get find result
+
+  async getFindResult(queryParams: {
+    country?: string;
+    city?: string;
+    program?: string;
+  }) {
+    try {
+      const { country, city, program } = queryParams;
+      const query: any = {};
+
+      if (country) {
+        query.country = new RegExp(`^${country}$`, 'i');
+      }
+
+      if (city) {
+        query.city = new RegExp(`^${city}`, 'i');
+      }
+
+      if (program) {
+        query.programs = { $in: [new RegExp(`^${program}$`, 'i')] };
+      }
+
+      const result = await this.scholarshipPackageModel
+        .find(query)
+        .sort({ updatedAt: -1 })
+        .exec();
+
+      if (result.length === 0) {
+        return { success: false, count: result.length };
+      }
+
+      return {
+        success: true,
+        count: result.length,
+        data: result,
+      };
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException(
+        'Failed to fetch medical packages',
+      );
+    }
   }
 }

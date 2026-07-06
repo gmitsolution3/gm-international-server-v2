@@ -9,6 +9,8 @@ import {
   Param,
   Delete,
   Put,
+  Query,
+  Res,
 } from '@nestjs/common';
 import { ScholarshipPackageService } from './scholarship-package.service';
 import { ScholarshipPackage } from '../scholarship.schema';
@@ -107,5 +109,19 @@ export class ScholarshipPackageController {
   @Get('student-programs/unique')
   async getStudentUniqueProgram() {
     return this.scholarshipPackageService.getStudentUniqueProgram();
+  }
+
+  // api will be-> // scholarship-package/api/v1/find-search-result
+  @Get('find-search-result')
+  async getFindResult(
+    @Query('country') country: string,
+    @Query('city') city: string,
+    @Query('program') program: string,
+  ) {
+    return await this.scholarshipPackageService.getFindResult({
+      country,
+      city,
+      program,
+    });
   }
 }
