@@ -46,7 +46,7 @@ export class BusinessPackageService {
   async getAllPackages() {
     try {
       const data = await this.businessPackageModel
-        .find({ packageStatus: 'active', isWithVisaAndAirTicket: true })
+        .find({ packageStatus: 'active' })
         .sort({ createdAt: -1 })
         .lean()
         .exec();
